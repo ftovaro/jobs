@@ -6,9 +6,22 @@ if [ -z "${LD_PRELOAD+x}" ]; then
     export LD_PRELOAD
 fi
 
-# If running the rails server then create or migrate existing database
-if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
-  ./bin/rails db:prepare
-fi
+# Check process type: default is 'web'
+PROCESS_TYPE="${PROCESS_TYPE:-web}"
 
-exec "${@}"
+if [ "$PROCESS_TYPE" = "web" ]; then
+  # If running the rails server, then create or migrate existing database
+  if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
+    ./bin/rails db:prepare
+  fi
+
+  exec "${@}"
+
+elif [ "$PROCESS_TYPE" = "worker" ]; then
+  echo "Running Solid Queue Worker..."
+  exec bundle exec rails solid_queue:start
+
+else
+  echo "Unknown PROCESS_TYPE: ${PROCESS_TYPE}"
+  exit 1
+fi
