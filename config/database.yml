@@ -21,9 +21,15 @@ default: &default
 
 
 development:
-  <<: *default
-  database: jobs_development
-
+  primary: &primary_production
+    <<: *default
+    database: jobs_development
+  cache:
+    <<: *primary_production
+  queue:
+    <<: *primary_production
+  cable:
+    <<: *primary_production
   # The specified database role being used to connect to PostgreSQL.
   # To create additional roles in PostgreSQL see `$ createuser --help`.
   # When left blank, PostgreSQL will use the default role. This is
