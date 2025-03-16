@@ -5,7 +5,7 @@ class PostsController < ApplicationController
   def index
     @posts = Post.all
 
-    #GuestsCleanupJob.perform_later
+    GuestsCleanupJob.perform_later
   end
 
   # GET /posts/1 or /posts/1.json
