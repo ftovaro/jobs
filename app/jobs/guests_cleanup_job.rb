@@ -10,7 +10,6 @@ class GuestsCleanupJob < ApplicationJob
     Rails.logger.info("**************************************************")
     Rails.logger.info("**************************************************")
 
-    sleep 20
     Post.create(title: "Job", body: "Job content: #{Time.now}")
   end
 end
